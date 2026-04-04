@@ -132,18 +132,16 @@ export default function App() {
         )}
       </main>
 
-      {status === 'start' && (
-        <footer className="relative z-10 p-6 text-center">
-          <a 
-            href="https://www.mawil.org" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-sand-400 hover:text-sand-200 transition-colors text-sm sm:text-base font-medium"
-          >
-            Brought to you by: <span className="underline underline-offset-4">www.Mawil.org</span>
-          </a>
-        </footer>
-      )}
+      <footer className="relative z-10 p-6 text-center">
+        <a 
+          href="https://www.mawil.org" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-sand-400 hover:text-sand-200 transition-colors text-sm sm:text-base font-medium"
+        >
+          Brought to you by: <span className="underline underline-offset-4">www.Mawil.org</span>
+        </a>
+      </footer>
     </div>
   );
 }
