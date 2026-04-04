@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Oswald", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-sand-50: #fdfbf7;
+  --color-sand-100: #f8f4eb;
+  --color-sand-200: #efe5d2;
+  --color-sand-300: #e3d1b3;
+  --color-sand-400: #d4b88e;
+  --color-sand-500: #c7a06f;
+  --color-sand-600: #b88856;
+  --color-sand-700: #9a6c46;
+  --color-sand-800: #7e593d;
+  --color-sand-900: #664934;
+  --color-sand-950: #36251a;
+
+  --color-dark-50: #f6f6f6;
+  --color-dark-100: #e7e7e7;
+  --color-dark-200: #d1d1d1;
+  --color-dark-300: #b0b0b0;
+  --color-dark-400: #888888;
+  --color-dark-500: #6d6d6d;
+  --color-dark-600: #5d5d5d;
+  --color-dark-700: #4f4f4f;
+  --color-dark-800: #454545;
+  --color-dark-900: #3d3d3d;
+  --color-dark-950: #1a1a1a;
+}
+
+@layer base {
+  body {
+    @apply bg-dark-950 text-sand-50 font-sans antialiased selection:bg-sand-500 selection:text-dark-950;
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "A user's top score in the Animal Trivia Game.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The user's Firebase Auth UID."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "The user's profile photo URL."
+        },
+        "score": {
+          "type": "number",
+          "description": "The user's highest score."
+        },
+        "timestamp": {
+          "type": "timestamp",
+          "description": "The time the score was achieved."
+        }
+      },
+      "required": ["uid", "displayName", "photoURL", "score", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/leaderboard/{userId}": {
+      "schema": {
+        "$ref": "#/entities/LeaderboardEntry"
+      },
+      "description": "Stores the highest score for each user."
+    }
+  }
+}

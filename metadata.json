@@ -1,0 +1,5 @@
+{
+  "name": "Animal Trivia Game",
+  "description": "A high-fidelity Animal Trivia Game with a Sand/Dark aesthetic, Google Auth, and a real-time leaderboard.",
+  "requestFramePermissions": []
+}
