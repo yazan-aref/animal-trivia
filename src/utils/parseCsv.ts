@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import quizCsvText from '../data/quiz.csv?raw';
 
 export interface Question {
   id: number;
@@ -9,11 +10,8 @@ export interface Question {
 }
 
 export async function loadQuestions(): Promise<Question[]> {
-  const response = await fetch('/src/data/quiz.csv');
-  const csvText = await response.text();
-  
   return new Promise((resolve, reject) => {
-    Papa.parse(csvText, {
+    Papa.parse(quizCsvText, {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
