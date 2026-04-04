@@ -61,9 +61,11 @@ export default function App() {
       </div>
 
       <header className="relative z-10 p-4 sm:p-6 flex justify-between items-center max-w-7xl w-full mx-auto">
-        <div 
+        <a 
+          href="https://www.mawil.org"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-3 cursor-pointer group"
-          onClick={() => setStatus('start')}
         >
           <img 
             src="https://github.com/yazan-aref/Mawil-images/blob/main/logo.png?raw=true" 
@@ -74,7 +76,7 @@ export default function App() {
           <div className="text-xl sm:text-2xl font-bold tracking-tight text-sand-200">
             Maw'il <span className="text-sand-500">AnimalTrivia</span>
           </div>
-        </div>
+        </a>
         <div className="flex items-center gap-2 sm:gap-4">
           {status !== 'leaderboard' && (
             <button 
@@ -129,6 +131,19 @@ export default function App() {
           />
         )}
       </main>
+
+      {status === 'start' && (
+        <footer className="relative z-10 p-6 text-center">
+          <a 
+            href="https://www.mawil.org" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-sand-400 hover:text-sand-200 transition-colors text-sm sm:text-base font-medium"
+          >
+            Brought to you by: <span className="underline underline-offset-4">www.Mawil.org</span>
+          </a>
+        </footer>
+      )}
     </div>
   );
 }
