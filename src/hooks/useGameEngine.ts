@@ -3,7 +3,7 @@ import { Question } from '../utils/parseCsv';
 
 export type GameStatus = 'loading' | 'start' | 'playing' | 'gameover' | 'leaderboard';
 
-const QUESTIONS_PER_GAME = 10;
+const QUESTIONS_PER_GAME = 15;
 
 export function useGameEngine(allQuestions: Question[]) {
   const [status, setStatus] = useState<GameStatus>('loading');
