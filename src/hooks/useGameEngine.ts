@@ -24,12 +24,16 @@ export function useGameEngine(allQuestions: Question[]) {
     setCurrentQuestions(shuffled.slice(0, QUESTIONS_PER_GAME));
     setCurrentIndex(0);
     setScore(0);
+    setIsRevealed(false);
+    setSelectedAnswer(null);
     setStatus('playing');
   }, [allQuestions]);
 
   const nextQuestion = useCallback(() => {
     if (currentIndex < currentQuestions.length - 1) {
       setCurrentIndex(prev => prev + 1);
+      setIsRevealed(false);
+      setSelectedAnswer(null);
     } else {
       setStatus('gameover');
     }
