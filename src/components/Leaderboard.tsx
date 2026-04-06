@@ -124,7 +124,12 @@ export function Leaderboard({ onBack, user }: LeaderboardProps) {
                       {entry.score.toLocaleString()} pts
                     </p>
                     <p className="text-xs sm:text-sm text-sand-500 font-medium">
-                      {entry.quizzesCompleted || 1} {entry.quizzesCompleted === 1 ? 'quiz' : 'quizzes'}
+                      {(() => {
+                        // Max possible score per game is 15,000 (15 Qs * 1000 pts)
+                        const minQuizzes = Math.ceil(entry.score / 15000);
+                        const quizzesCount = Math.max(entry.quizzesCompleted || 1, minQuizzes);
+                        return `${quizzesCount} ${quizzesCount === 1 ? 'quiz' : 'quizzes'}`;
+                      })()}
                     </p>
                   </div>
                 </motion.div>
