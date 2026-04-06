@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { User } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp, increment } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp, increment } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Trophy, RotateCcw, ListOrdered, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -18,6 +18,7 @@ interface GameOverScreenProps {
 export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderboard, user }: GameOverScreenProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle');
+  const [hasSaved, setHasSaved] = useState(false);
 
   useEffect(() => {
     // Trigger confetti on mount
@@ -52,22 +53,51 @@ export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderb
 
   useEffect(() => {
     async function saveScore() {
-      if (!user || score === 0) return;
+      if (!user || score === 0 || hasSaved) return;
       
       setIsSaving(true);
       try {
         const docRef = doc(db, 'leaderboard', user.uid);
+        const docSnap = await getDoc(docRef);
         
-        await setDoc(docRef, {
-          uid: user.uid,
-          displayName: user.displayName || 'Anonymous',
-          photoURL: user.photoURL || '',
-          score: increment(score),
-          quizzesCompleted: increment(1),
-          timestamp: serverTimestamp()
-        }, { merge: true });
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          // If the document exists but doesn't have quizzesCompleted (legacy user)
+          if (data.quizzesCompleted === undefined) {
+            const inferredQuizzes = Math.max(1, Math.ceil((data.score || 0) / 15000));
+            await setDoc(docRef, {
+              uid: user.uid,
+              displayName: user.displayName || 'Anonymous',
+              photoURL: user.photoURL || '',
+              score: increment(score),
+              quizzesCompleted: inferredQuizzes + 1,
+              timestamp: serverTimestamp()
+            }, { merge: true });
+          } else {
+            // Normal increment
+            await setDoc(docRef, {
+              uid: user.uid,
+              displayName: user.displayName || 'Anonymous',
+              photoURL: user.photoURL || '',
+              score: increment(score),
+              quizzesCompleted: increment(1),
+              timestamp: serverTimestamp()
+            }, { merge: true });
+          }
+        } else {
+          // New user
+          await setDoc(docRef, {
+            uid: user.uid,
+            displayName: user.displayName || 'Anonymous',
+            photoURL: user.photoURL || '',
+            score: score,
+            quizzesCompleted: 1,
+            timestamp: serverTimestamp()
+          });
+        }
         
         setSaveStatus('saved');
+        setHasSaved(true);
       } catch (error) {
         console.error("Error saving score:", error);
         setSaveStatus('error');
@@ -78,7 +108,7 @@ export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderb
     }
 
     saveScore();
-  }, [user, score]);
+  }, [user, score, hasSaved]);
 
   return (
     <motion.div 
