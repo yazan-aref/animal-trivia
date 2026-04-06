@@ -21,12 +21,16 @@
           "type": "number",
           "description": "The user's highest score."
         },
+        "quizzesCompleted": {
+          "type": "number",
+          "description": "The total number of quizzes the user has completed."
+        },
         "timestamp": {
           "type": "timestamp",
           "description": "The time the score was achieved."
         }
       },
-      "required": ["uid", "displayName", "photoURL", "score", "timestamp"]
+      "required": ["uid", "displayName", "photoURL", "score", "quizzesCompleted", "timestamp"]
     }
   },
   "firestore": {

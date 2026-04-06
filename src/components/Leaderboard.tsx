@@ -16,6 +16,7 @@ interface LeaderboardEntry {
   displayName: string;
   photoURL: string;
   score: number;
+  quizzesCompleted?: number;
 }
 
 export function Leaderboard({ onBack, user }: LeaderboardProps) {
@@ -118,9 +119,12 @@ export function Leaderboard({ onBack, user }: LeaderboardProps) {
                     </p>
                   </div>
                   
-                  <div className="text-right ml-3 sm:ml-4">
+                  <div className="text-right ml-3 sm:ml-4 flex flex-col items-end">
                     <p className="text-lg sm:text-xl font-bold text-sand-300">
-                      {entry.score.toLocaleString()}
+                      {entry.score.toLocaleString()} pts
+                    </p>
+                    <p className="text-xs sm:text-sm text-sand-500 font-medium">
+                      {entry.quizzesCompleted || 1} {entry.quizzesCompleted === 1 ? 'quiz' : 'quizzes'}
                     </p>
                   </div>
                 </motion.div>

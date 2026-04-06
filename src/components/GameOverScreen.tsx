@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { User } from 'firebase/auth';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, increment } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Trophy, RotateCcw, ListOrdered, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -57,18 +57,16 @@ export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderb
       setIsSaving(true);
       try {
         const docRef = doc(db, 'leaderboard', user.uid);
-        const docSnap = await getDoc(docRef);
         
-        // Only update if new score is higher
-        if (!docSnap.exists() || docSnap.data().score < score) {
-          await setDoc(docRef, {
-            uid: user.uid,
-            displayName: user.displayName || 'Anonymous',
-            photoURL: user.photoURL || '',
-            score: score,
-            timestamp: serverTimestamp()
-          });
-        }
+        await setDoc(docRef, {
+          uid: user.uid,
+          displayName: user.displayName || 'Anonymous',
+          photoURL: user.photoURL || '',
+          score: increment(score),
+          quizzesCompleted: increment(1),
+          timestamp: serverTimestamp()
+        }, { merge: true });
+        
         setSaveStatus('saved');
       } catch (error) {
         console.error("Error saving score:", error);

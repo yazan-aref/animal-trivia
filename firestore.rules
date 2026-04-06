@@ -11,7 +11,8 @@ service cloud.firestore {
     //   - uid: string (required, immutable) - The user's Firebase Auth UID.
     //   - displayName: string (required) - The user's display name.
     //   - photoURL: string (required) - The user's profile photo URL.
-    //   - score: number (required) - The user's highest score.
+    //   - score: number (required) - The user's total accumulated score.
+    //   - quizzesCompleted: number (required) - The total number of quizzes completed.
     //   - timestamp: timestamp (required) - The time the score was achieved.
     //
     // ===============================================================
@@ -50,12 +51,13 @@ service cloud.firestore {
 
     // Domain Validators
     function isValidLeaderboardEntry() {
-      return hasOnlyAllowedFields(['uid', 'displayName', 'photoURL', 'score', 'timestamp']) &&
-             hasRequiredFields(['uid', 'displayName', 'photoURL', 'score', 'timestamp']) &&
+      return hasOnlyAllowedFields(['uid', 'displayName', 'photoURL', 'score', 'quizzesCompleted', 'timestamp']) &&
+             hasRequiredFields(['uid', 'displayName', 'photoURL', 'score', 'quizzesCompleted', 'timestamp']) &&
              request.resource.data.uid is string &&
              request.resource.data.displayName is string && request.resource.data.displayName.size() > 0 && request.resource.data.displayName.size() < 100 &&
              request.resource.data.photoURL is string && isValidUrl(request.resource.data.photoURL) && request.resource.data.photoURL.size() < 500 &&
              request.resource.data.score is number && request.resource.data.score >= 0 &&
+             request.resource.data.quizzesCompleted is number && request.resource.data.quizzesCompleted >= 0 &&
              request.resource.data.timestamp is timestamp;
     }
 
