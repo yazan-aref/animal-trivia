@@ -85,7 +85,7 @@ export default function App() {
             referrerPolicy="no-referrer"
           />
           <div className="text-xl sm:text-2xl font-bold tracking-tight text-sand-200">
-            Maw'il <span className="text-sand-500">AnimalTrivia</span>
+            Maw'il <span className="text-sand-500">Wildlife Trivia</span>
           </div>
         </a>
         <div className="flex items-center gap-2 sm:gap-4">

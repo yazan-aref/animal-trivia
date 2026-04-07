@@ -28,12 +28,12 @@ export function StartScreen({ onStart, user }: StartScreenProps) {
       <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-4 sm:mb-6 text-[#ead7ad]">
         The Ultimate <br/>
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-sand-300 to-sand-600">
-          Animal Trivia
+          Wildlife Trivia
         </span>
       </h1>
       
       <p className="text-base sm:text-lg md:text-xl text-[#ead7ad] mb-8 sm:mb-12 max-w-lg leading-relaxed">
-        Test your knowledge of the animal kingdom. Answer fast to earn more points and climb the global leaderboard.
+        Test your knowledge on wildlife. Answer fast to earn more points and climb the global leaderboard.
       </p>
       
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
