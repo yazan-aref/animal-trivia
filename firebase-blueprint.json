@@ -25,6 +25,20 @@
           "type": "number",
           "description": "The total number of quizzes the user has completed."
         },
+        "stats": {
+          "type": "object",
+          "description": "User statistics.",
+          "properties": {
+            "totalCorrect": { "type": "number" },
+            "maxStreak": { "type": "number" },
+            "marathonHighScore": { "type": "number" }
+          }
+        },
+        "achievements": {
+          "type": "array",
+          "description": "List of earned achievement IDs.",
+          "items": { "type": "string" }
+        },
         "timestamp": {
           "type": "timestamp",
           "description": "The time the score was achieved."

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
-import { ArrowLeft, Trophy, Medal } from 'lucide-react';
+import { ArrowLeft, Trophy, Medal, Award } from 'lucide-react';
 import { User } from 'firebase/auth';
 import { handleFirestoreError, OperationType } from '../utils/firestoreErrors';
 
@@ -17,7 +17,16 @@ interface LeaderboardEntry {
   photoURL: string;
   score: number;
   quizzesCompleted?: number;
+  achievements?: string[];
 }
+
+const ACHIEVEMENT_ICONS: Record<string, string> = {
+  first_quiz: '🌟',
+  novice: '📚',
+  expert: '🔥',
+  speedy: '⚡',
+  marathon_runner: '🏃'
+};
 
 export function Leaderboard({ onBack, user }: LeaderboardProps) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
@@ -113,10 +122,17 @@ export function Leaderboard({ onBack, user }: LeaderboardProps) {
                   />
                   
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm sm:text-base text-sand-50 font-semibold truncate">
+                    <p className="text-sm sm:text-base text-sand-50 font-semibold truncate flex items-center gap-2">
                       {entry.displayName}
-                      {isCurrentUser && <span className="ml-2 text-[10px] sm:text-xs bg-sand-700 text-sand-200 px-2 py-0.5 rounded-full">You</span>}
+                      {isCurrentUser && <span className="text-[10px] sm:text-xs bg-sand-700 text-sand-200 px-2 py-0.5 rounded-full">You</span>}
                     </p>
+                    {entry.achievements && entry.achievements.length > 0 && (
+                      <div className="flex gap-1 mt-1">
+                        {entry.achievements.map(ach => (
+                          <span key={ach} className="text-xs" title={ach}>{ACHIEVEMENT_ICONS[ach] || '🏆'}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   
                   <div className="text-right ml-3 sm:ml-4 flex flex-col items-end">

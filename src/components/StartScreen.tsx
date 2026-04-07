@@ -1,9 +1,10 @@
 import { motion } from 'motion/react';
-import { Play, Trophy } from 'lucide-react';
+import { Play, Trophy, Flame } from 'lucide-react';
 import { User } from 'firebase/auth';
+import { GameMode } from '../hooks/useGameEngine';
 
 interface StartScreenProps {
-  onStart: () => void;
+  onStart: (mode: GameMode) => void;
   user: User | null;
 }
 
@@ -35,25 +36,36 @@ export function StartScreen({ onStart, user }: StartScreenProps) {
         Test your knowledge of the animal kingdom. Answer fast to earn more points and climb the global leaderboard.
       </p>
       
-      <div className="flex flex-col items-center gap-4 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
         <button
-          onClick={onStart}
+          onClick={() => onStart('classic')}
           className="group relative inline-flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-sand-200 text-dark-950 font-bold text-base sm:text-lg rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto"
         >
           <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-sand-100 to-sand-300 opacity-0 group-hover:opacity-100 transition-opacity" />
           <span className="relative flex items-center gap-2">
             <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-            Start Game
+            Classic Mode
           </span>
         </button>
-        
-        {!user && (
-          <p className="text-xs sm:text-sm text-[#ead7ad] mt-2 sm:mt-4">
-            <span className="inline-block w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-sand-500 mr-2 animate-pulse" />
-            Login to save your score to the leaderboard
-          </p>
-        )}
+
+        <button
+          onClick={() => onStart('marathon')}
+          className="group relative inline-flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-red-900/80 text-red-100 border border-red-500/50 font-bold text-base sm:text-lg rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto"
+        >
+          <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-red-800 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <span className="relative flex items-center gap-2">
+            <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
+            Marathon Mode
+          </span>
+        </button>
       </div>
+      
+      {!user && (
+        <p className="text-xs sm:text-sm text-[#ead7ad] mt-4 sm:mt-6">
+          <span className="inline-block w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-sand-500 mr-2 animate-pulse" />
+          Login to save your score to the leaderboard
+        </p>
+      )}
     </motion.div>
   );
 }

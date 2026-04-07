@@ -8,14 +8,18 @@ import { AuthButton } from './components/AuthButton';
 import { auth } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useGameEngine } from './hooks/useGameEngine';
+import { audioController } from './utils/audio';
+import { Volume2, VolumeX } from 'lucide-react';
 
 export default function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [isMuted, setIsMuted] = useState(audioController.muted);
 
   const {
     status,
     setStatus,
+    gameMode,
     currentQuestions,
     currentIndex,
     currentQuestion,
@@ -23,6 +27,9 @@ export default function App() {
     timeLeft,
     selectedAnswer,
     isRevealed,
+    streak,
+    fastAnswers,
+    stats,
     startGame,
     handleSelectAnswer
   } = useGameEngine(questions);
@@ -45,6 +52,10 @@ export default function App() {
         setStatus('start');
       });
   }, [setStatus]);
+
+  const toggleMute = () => {
+    setIsMuted(audioController.toggleMute());
+  };
 
   return (
     <div 
@@ -78,6 +89,13 @@ export default function App() {
           </div>
         </a>
         <div className="flex items-center gap-2 sm:gap-4">
+          <button
+            onClick={toggleMute}
+            className="p-2 text-sand-300 hover:text-sand-100 transition-colors rounded-full hover:bg-sand-900/50"
+            aria-label={isMuted ? "Unmute sound" : "Mute sound"}
+          >
+            {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+          </button>
           {status !== 'leaderboard' && (
             <button 
               onClick={() => setStatus('leaderboard')}
@@ -111,16 +129,20 @@ export default function App() {
             selectedAnswer={selectedAnswer}
             isRevealed={isRevealed}
             onSelectAnswer={handleSelectAnswer}
+            gameMode={gameMode}
           />
         )}
         
         {status === 'gameover' && (
           <GameOverScreen 
             score={score} 
-            totalQuestions={currentQuestions.length}
-            onRestart={startGame}
+            totalQuestions={currentIndex + (isRevealed ? 1 : 0)}
+            onRestart={() => startGame(gameMode)}
             onViewLeaderboard={() => setStatus('leaderboard')}
             user={user}
+            gameMode={gameMode}
+            stats={stats}
+            fastAnswers={fastAnswers}
           />
         )}
         

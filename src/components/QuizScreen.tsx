@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
 import { Question } from '../utils/parseCsv';
 import { cn } from '../lib/utils';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Flame } from 'lucide-react';
+import { GameMode } from '../hooks/useGameEngine';
 
 interface QuizScreenProps {
   currentQuestion: Question;
@@ -12,6 +13,7 @@ interface QuizScreenProps {
   selectedAnswer: number | null;
   isRevealed: boolean;
   onSelectAnswer: (index: number) => void;
+  gameMode: GameMode;
 }
 
 export function QuizScreen({ 
@@ -22,15 +24,25 @@ export function QuizScreen({
   timeLeft, 
   selectedAnswer, 
   isRevealed, 
-  onSelectAnswer 
+  onSelectAnswer,
+  gameMode
 }: QuizScreenProps) {
   const progressPercent = (timeLeft / currentQuestion.timeLimit) * 100;
 
   return (
     <div className="w-full max-w-3xl flex flex-col items-center">
       <div className="w-full flex justify-between items-center mb-6 sm:mb-8 text-sand-400 font-medium text-sm sm:text-base">
-        <div className="bg-dark-900 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-dark-800">
-          Q {currentIndex + 1} <span className="hidden sm:inline">of {totalQuestions}</span>
+        <div className="bg-dark-900 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-dark-800 flex items-center gap-2">
+          {gameMode === 'marathon' ? (
+            <>
+              <Flame className="w-4 h-4 text-red-500" />
+              <span>Q {currentIndex + 1}</span>
+            </>
+          ) : (
+            <>
+              Q {currentIndex + 1} <span className="hidden sm:inline">of {totalQuestions}</span>
+            </>
+          )}
         </div>
         <div className="bg-dark-900 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-dark-800 flex items-center gap-2">
           <TrophyIcon className="w-3 h-3 sm:w-4 sm:h-4 text-sand-500" />

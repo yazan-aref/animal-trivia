@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Question } from '../utils/parseCsv';
+import { audioController } from '../utils/audio';
 
 export type GameStatus = 'loading' | 'start' | 'playing' | 'gameover' | 'leaderboard';
+export type GameMode = 'classic' | 'marathon';
 
 const QUESTIONS_PER_GAME = 15;
 
 export function useGameEngine(allQuestions: Question[]) {
   const [status, setStatus] = useState<GameStatus>('loading');
+  const [gameMode, setGameMode] = useState<GameMode>('classic');
   const [currentQuestions, setCurrentQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -14,16 +17,30 @@ export function useGameEngine(allQuestions: Question[]) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
 
+  // Stats tracking
+  const [streak, setStreak] = useState(0);
+  const [fastAnswers, setFastAnswers] = useState(0);
+  const [stats, setStats] = useState({ correct: 0, maxStreak: 0 });
+
   const timerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
+  const lastTickRef = useRef<number>(0);
 
   const currentQuestion = currentQuestions[currentIndex];
 
-  const startGame = useCallback(() => {
+  const startGame = useCallback((mode: GameMode = 'classic') => {
     const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-    setCurrentQuestions(shuffled.slice(0, QUESTIONS_PER_GAME));
+    setGameMode(mode);
+    if (mode === 'classic') {
+      setCurrentQuestions(shuffled.slice(0, QUESTIONS_PER_GAME));
+    } else {
+      setCurrentQuestions(shuffled);
+    }
     setCurrentIndex(0);
     setScore(0);
+    setStreak(0);
+    setFastAnswers(0);
+    setStats({ correct: 0, maxStreak: 0 });
     setIsRevealed(false);
     setSelectedAnswer(null);
     setStatus('playing');
@@ -41,9 +58,17 @@ export function useGameEngine(allQuestions: Question[]) {
 
   const handleTimeUp = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
+    audioController.playIncorrect();
     setIsRevealed(true);
-    setTimeout(nextQuestion, 2500);
-  }, [nextQuestion]);
+    setStreak(0);
+    setTimeout(() => {
+      if (gameMode === 'marathon') {
+        setStatus('gameover');
+      } else {
+        nextQuestion();
+      }
+    }, 2500);
+  }, [nextQuestion, gameMode]);
 
   const startQuestionTimer = useCallback(() => {
     if (!currentQuestion) return;
@@ -52,6 +77,7 @@ export function useGameEngine(allQuestions: Question[]) {
     setSelectedAnswer(null);
     setIsRevealed(false);
     startTimeRef.current = Date.now();
+    lastTickRef.current = 0;
 
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -59,6 +85,12 @@ export function useGameEngine(allQuestions: Question[]) {
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
       const remaining = Math.max(0, currentQuestion.timeLimit - elapsed);
       setTimeLeft(remaining);
+
+      const currentSecond = Math.ceil(remaining);
+      if (currentSecond <= 5 && currentSecond > 0 && currentSecond !== lastTickRef.current) {
+        audioController.playTick();
+        lastTickRef.current = currentSecond;
+      }
 
       if (remaining <= 0) {
         handleTimeUp();
@@ -84,18 +116,39 @@ export function useGameEngine(allQuestions: Question[]) {
 
     const isCorrect = currentQuestion.correctAnswers.includes(index);
     if (isCorrect) {
+      audioController.playCorrect();
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
       const ratio = Math.max(0, 1 - (elapsed / currentQuestion.timeLimit));
       const points = Math.round(500 + (500 * ratio));
       setScore(prev => prev + points);
+      
+      setStreak(prev => {
+        const newStreak = prev + 1;
+        setStats(s => ({ ...s, correct: s.correct + 1, maxStreak: Math.max(s.maxStreak, newStreak) }));
+        return newStreak;
+      });
+
+      if (elapsed < 10) {
+        setFastAnswers(prev => prev + 1);
+      }
+    } else {
+      audioController.playIncorrect();
+      setStreak(0);
     }
 
-    setTimeout(nextQuestion, 2500);
-  }, [isRevealed, currentQuestion, nextQuestion]);
+    setTimeout(() => {
+      if (gameMode === 'marathon' && !isCorrect) {
+        setStatus('gameover');
+      } else {
+        nextQuestion();
+      }
+    }, 2500);
+  }, [isRevealed, currentQuestion, nextQuestion, gameMode]);
 
   return {
     status,
     setStatus,
+    gameMode,
     currentQuestions,
     currentIndex,
     currentQuestion,
@@ -103,6 +156,9 @@ export function useGameEngine(allQuestions: Question[]) {
     timeLeft,
     selectedAnswer,
     isRevealed,
+    streak,
+    fastAnswers,
+    stats,
     startGame,
     handleSelectAnswer
   };
