@@ -76,9 +76,7 @@ export default function App() {
       <header className="relative z-10 p-4 sm:p-6 flex justify-between items-center max-w-7xl w-full mx-auto">
         <div className="flex items-center gap-4 sm:gap-6">
           <a 
-            href="https://games.mawil.org"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="https://games.mawil.org/trivia"
             className="flex items-center gap-3 cursor-pointer group"
           >
             <img 
@@ -93,7 +91,7 @@ export default function App() {
           </a>
 
           <a 
-            href="https://games.mawil.org"
+            href="https://games.mawil.org/trivia"
             className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-sand-900/40 hover:bg-sand-800/60 border border-sand-800/50 rounded-full text-xs font-semibold text-sand-300 transition-all hover:text-sand-100"
           >
             <Gamepad2 className="w-4 h-4" />
@@ -103,7 +101,7 @@ export default function App() {
 
         <div className="flex items-center gap-2 sm:gap-4">
           <a 
-            href="https://games.mawil.org"
+            href="https://games.mawil.org/trivia"
             className="md:hidden p-2 text-sand-300 hover:text-sand-100 transition-colors rounded-full hover:bg-sand-900/50"
             title="Back to Games"
           >
