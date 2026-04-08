@@ -10,7 +10,7 @@ import { auth } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useGameEngine } from './hooks/useGameEngine';
 import { audioController } from './utils/audio';
-import { Volume2, VolumeX, History, Gamepad2, Trophy } from 'lucide-react';
+import { Volume2, VolumeX, History, Gamepad2 } from 'lucide-react';
 
 export default function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -76,7 +76,9 @@ export default function App() {
       <header className="relative z-10 p-4 sm:p-6 flex justify-between items-center max-w-7xl w-full mx-auto">
         <div className="flex items-center gap-4 sm:gap-6">
           <a 
-            href="https://games.mawil.org/trivia"
+            href="https://www.mawil.org"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-3 cursor-pointer group"
           >
             <img 
@@ -128,9 +130,8 @@ export default function App() {
           {status !== 'leaderboard' && (
             <button 
               onClick={() => setStatus('leaderboard')}
-              className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-sand-300 hover:text-sand-100 transition-colors"
+              className="text-xs sm:text-sm font-medium text-sand-300 hover:text-sand-100 transition-colors"
             >
-              <Trophy className="w-4 h-4" />
               Leaderboard
             </button>
           )}
@@ -194,10 +195,12 @@ export default function App() {
 
       <footer className="relative z-10 p-6 text-center">
         <a 
-          href="https://games.mawil.org/trivia" 
+          href="https://www.mawil.org" 
+          target="_blank" 
+          rel="noopener noreferrer"
           className="text-sand-400 hover:text-sand-200 transition-colors text-sm sm:text-base font-medium"
         >
-          Brought to you by: <span className="underline underline-offset-4">games.mawil.org/trivia</span>
+          Brought to you by: <span className="underline underline-offset-4">www.Mawil.org</span>
         </a>
       </footer>
     </div>

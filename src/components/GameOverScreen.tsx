@@ -232,7 +232,7 @@ export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderb
           onClick={onViewLeaderboard}
           className="flex-1 flex items-center justify-center gap-2 py-3 sm:py-4 bg-sand-200 hover:bg-sand-300 text-dark-950 font-bold rounded-xl transition-colors text-sm sm:text-base"
         >
-          <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
+          <ListOrdered className="w-4 h-4 sm:w-5 sm:h-5" />
           Leaderboard
         </button>
       </div>
