@@ -76,7 +76,7 @@ export default function App() {
       <header className="relative z-10 p-4 sm:p-6 flex justify-between items-center max-w-7xl w-full mx-auto">
         <div className="flex items-center gap-4 sm:gap-6">
           <a 
-            href="https://www.mawil.org"
+            href="https://games.mawil.org"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 cursor-pointer group"
