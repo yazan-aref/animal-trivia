@@ -10,7 +10,7 @@ import { auth } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useGameEngine } from './hooks/useGameEngine';
 import { audioController } from './utils/audio';
-import { Volume2, VolumeX, History } from 'lucide-react';
+import { Volume2, VolumeX, History, Gamepad2 } from 'lucide-react';
 
 export default function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -74,23 +74,41 @@ export default function App() {
       </div>
 
       <header className="relative z-10 p-4 sm:p-6 flex justify-between items-center max-w-7xl w-full mx-auto">
-        <a 
-          href="https://www.mawil.org"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 cursor-pointer group"
-        >
-          <img 
-            src="https://github.com/yazan-aref/Mawil-images/blob/main/logo.png?raw=true" 
-            alt="Maw'il Logo" 
-            className="w-8 h-8 sm:w-10 sm:h-10 object-contain transition-transform group-hover:scale-110"
-            referrerPolicy="no-referrer"
-          />
-          <div className="text-xl sm:text-2xl font-bold tracking-tight text-sand-200">
-            Maw'il <span className="text-sand-500">Wildlife Trivia</span>
-          </div>
-        </a>
+        <div className="flex items-center gap-4 sm:gap-6">
+          <a 
+            href="https://www.mawil.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 cursor-pointer group"
+          >
+            <img 
+              src="https://github.com/yazan-aref/Mawil-images/blob/main/logo.png?raw=true" 
+              alt="Maw'il Logo" 
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain transition-transform group-hover:scale-110"
+              referrerPolicy="no-referrer"
+            />
+            <div className="text-xl sm:text-2xl font-bold tracking-tight text-sand-200">
+              Maw'il <span className="text-sand-500">Wildlife Trivia</span>
+            </div>
+          </a>
+
+          <a 
+            href="https://games.mawil.org"
+            className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-sand-900/40 hover:bg-sand-800/60 border border-sand-800/50 rounded-full text-xs font-semibold text-sand-300 transition-all hover:text-sand-100"
+          >
+            <Gamepad2 className="w-4 h-4" />
+            Back to Games
+          </a>
+        </div>
+
         <div className="flex items-center gap-2 sm:gap-4">
+          <a 
+            href="https://games.mawil.org"
+            className="md:hidden p-2 text-sand-300 hover:text-sand-100 transition-colors rounded-full hover:bg-sand-900/50"
+            title="Back to Games"
+          >
+            <Gamepad2 className="w-5 h-5" />
+          </a>
           <button
             onClick={toggleMute}
             className="p-2 text-sand-300 hover:text-sand-100 transition-colors rounded-full hover:bg-sand-900/50"
