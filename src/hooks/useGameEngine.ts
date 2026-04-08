@@ -2,8 +2,15 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Question } from '../utils/parseCsv';
 import { audioController } from '../utils/audio';
 
-export type GameStatus = 'loading' | 'start' | 'playing' | 'gameover' | 'leaderboard';
+export type GameStatus = 'loading' | 'start' | 'playing' | 'gameover' | 'leaderboard' | 'history';
 export type GameMode = 'classic' | 'marathon';
+
+export interface AnswerRecord {
+  questionText: string;
+  isCorrect: boolean;
+  userAnswer: string;
+  correctAnswer: string;
+}
 
 const QUESTIONS_PER_GAME = 15;
 
@@ -21,6 +28,7 @@ export function useGameEngine(allQuestions: Question[]) {
   const [streak, setStreak] = useState(0);
   const [fastAnswers, setFastAnswers] = useState(0);
   const [stats, setStats] = useState({ correct: 0, maxStreak: 0 });
+  const [answerHistory, setAnswerHistory] = useState<AnswerRecord[]>([]);
 
   const timerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -41,6 +49,7 @@ export function useGameEngine(allQuestions: Question[]) {
     setStreak(0);
     setFastAnswers(0);
     setStats({ correct: 0, maxStreak: 0 });
+    setAnswerHistory([]);
     setIsRevealed(false);
     setSelectedAnswer(null);
     setStatus('playing');
@@ -61,6 +70,16 @@ export function useGameEngine(allQuestions: Question[]) {
     audioController.playIncorrect();
     setIsRevealed(true);
     setStreak(0);
+
+    if (currentQuestion) {
+      setAnswerHistory(prev => [...prev, {
+        questionText: currentQuestion.text,
+        isCorrect: false,
+        userAnswer: "Time's up!",
+        correctAnswer: currentQuestion.options[currentQuestion.correctAnswers[0]]
+      }]);
+    }
+
     setTimeout(() => {
       if (gameMode === 'marathon') {
         setStatus('gameover');
@@ -68,7 +87,7 @@ export function useGameEngine(allQuestions: Question[]) {
         nextQuestion();
       }
     }, 2500);
-  }, [nextQuestion, gameMode]);
+  }, [nextQuestion, gameMode, currentQuestion]);
 
   const startQuestionTimer = useCallback(() => {
     if (!currentQuestion) return;
@@ -115,6 +134,14 @@ export function useGameEngine(allQuestions: Question[]) {
     setIsRevealed(true);
 
     const isCorrect = currentQuestion.correctAnswers.includes(index);
+    
+    setAnswerHistory(prev => [...prev, {
+      questionText: currentQuestion.text,
+      isCorrect,
+      userAnswer: currentQuestion.options[index],
+      correctAnswer: currentQuestion.options[currentQuestion.correctAnswers[0]]
+    }]);
+
     if (isCorrect) {
       audioController.playCorrect();
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
@@ -159,6 +186,7 @@ export function useGameEngine(allQuestions: Question[]) {
     streak,
     fastAnswers,
     stats,
+    answerHistory,
     startGame,
     handleSelectAnswer
   };

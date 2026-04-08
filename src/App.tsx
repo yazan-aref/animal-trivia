@@ -4,12 +4,13 @@ import { StartScreen } from './components/StartScreen';
 import { QuizScreen } from './components/QuizScreen';
 import { GameOverScreen } from './components/GameOverScreen';
 import { Leaderboard } from './components/Leaderboard';
+import { QuizHistory } from './components/QuizHistory';
 import { AuthButton } from './components/AuthButton';
 import { auth } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useGameEngine } from './hooks/useGameEngine';
 import { audioController } from './utils/audio';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, History } from 'lucide-react';
 
 export default function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -30,6 +31,7 @@ export default function App() {
     streak,
     fastAnswers,
     stats,
+    answerHistory,
     startGame,
     handleSelectAnswer
   } = useGameEngine(questions);
@@ -96,6 +98,17 @@ export default function App() {
           >
             {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
           </button>
+          
+          {user && status !== 'history' && (
+            <button 
+              onClick={() => setStatus('history')}
+              className="p-2 text-sand-300 hover:text-sand-100 transition-colors rounded-full hover:bg-sand-900/50"
+              title="Quiz History"
+            >
+              <History className="w-5 h-5" />
+            </button>
+          )}
+
           {status !== 'leaderboard' && (
             <button 
               onClick={() => setStatus('leaderboard')}
@@ -143,11 +156,19 @@ export default function App() {
             gameMode={gameMode}
             stats={stats}
             fastAnswers={fastAnswers}
+            answerHistory={answerHistory}
           />
         )}
         
         {status === 'leaderboard' && (
           <Leaderboard 
+            onBack={() => setStatus('start')} 
+            user={user}
+          />
+        )}
+
+        {status === 'history' && (
+          <QuizHistory 
             onBack={() => setStatus('start')} 
             user={user}
           />

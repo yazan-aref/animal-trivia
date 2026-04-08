@@ -45,6 +45,51 @@
         }
       },
       "required": ["uid", "displayName", "photoURL", "score", "quizzesCompleted", "timestamp"]
+    },
+    "QuizHistoryEntry": {
+      "title": "QuizHistoryEntry",
+      "description": "A record of a completed quiz session.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The user's Firebase Auth UID."
+        },
+        "date": {
+          "type": "timestamp",
+          "description": "The time the quiz was completed."
+        },
+        "score": {
+          "type": "number",
+          "description": "The final score of the quiz."
+        },
+        "mode": {
+          "type": "string",
+          "description": "The game mode played (e.g., classic, marathon)."
+        },
+        "totalQuestions": {
+          "type": "number",
+          "description": "Total number of questions answered."
+        },
+        "correctAnswers": {
+          "type": "number",
+          "description": "Number of questions answered correctly."
+        },
+        "questionsSummary": {
+          "type": "array",
+          "description": "Summary of each question answered.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "questionText": { "type": "string" },
+              "isCorrect": { "type": "boolean" },
+              "userAnswer": { "type": "string" },
+              "correctAnswer": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["userId", "date", "score", "mode", "totalQuestions", "correctAnswers", "questionsSummary"]
     }
   },
   "firestore": {
@@ -53,6 +98,12 @@
         "$ref": "#/entities/LeaderboardEntry"
       },
       "description": "Stores the highest score for each user."
+    },
+    "/quizHistory/{entryId}": {
+      "schema": {
+        "$ref": "#/entities/QuizHistoryEntry"
+      },
+      "description": "Stores individual quiz session history for users."
     }
   }
 }

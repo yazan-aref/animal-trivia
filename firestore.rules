@@ -80,6 +80,18 @@ service cloud.firestore {
              request.resource.data.timestamp is timestamp;
     }
 
+    function isValidQuizHistoryEntry() {
+      return hasOnlyAllowedFields(['userId', 'date', 'score', 'mode', 'totalQuestions', 'correctAnswers', 'questionsSummary']) &&
+             hasRequiredFields(['userId', 'date', 'score', 'mode', 'totalQuestions', 'correctAnswers', 'questionsSummary']) &&
+             request.resource.data.userId is string &&
+             request.resource.data.date is timestamp &&
+             request.resource.data.score is number &&
+             request.resource.data.mode is string &&
+             request.resource.data.totalQuestions is number &&
+             request.resource.data.correctAnswers is number &&
+             request.resource.data.questionsSummary is list;
+    }
+
     // ===============================================================
     // Rules
     // ===============================================================
@@ -93,6 +105,12 @@ service cloud.firestore {
       allow update: if isOwner(userId) && isValidLeaderboardEntry() && uidNotModified() && 
                     // Ensure they don't change their UID
                     request.resource.data.uid == resource.data.uid;
+    }
+
+    match /quizHistory/{entryId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid && isValidQuizHistoryEntry();
+      allow update, delete: if false;
     }
   }
 }

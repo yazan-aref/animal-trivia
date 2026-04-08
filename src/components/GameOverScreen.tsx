@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { User } from 'firebase/auth';
-import { doc, setDoc, getDoc, serverTimestamp, increment } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp, increment, addDoc, collection } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Trophy, RotateCcw, ListOrdered, Loader2, Award } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { handleFirestoreError, OperationType } from '../utils/firestoreErrors';
-import { GameMode } from '../hooks/useGameEngine';
+import { GameMode, AnswerRecord } from '../hooks/useGameEngine';
 
 interface GameOverScreenProps {
   score: number;
@@ -17,6 +17,7 @@ interface GameOverScreenProps {
   gameMode: GameMode;
   stats: { correct: number; maxStreak: number };
   fastAnswers: number;
+  answerHistory: AnswerRecord[];
 }
 
 const ACHIEVEMENTS = {
@@ -27,7 +28,7 @@ const ACHIEVEMENTS = {
   marathon_runner: { id: 'marathon_runner', title: 'Marathon Runner', description: 'Reach a score of 10,000 in Marathon Mode.' }
 };
 
-export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderboard, user, gameMode, stats, fastAnswers }: GameOverScreenProps) {
+export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderboard, user, gameMode, stats, fastAnswers, answerHistory }: GameOverScreenProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle');
   const [hasSaved, setHasSaved] = useState(false);
@@ -126,6 +127,17 @@ export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderb
           achievements: updatedAchievements,
           timestamp: serverTimestamp()
         }, { merge: true });
+
+        // Save to quiz history
+        await addDoc(collection(db, 'quizHistory'), {
+          userId: user.uid,
+          date: serverTimestamp(),
+          score: score,
+          mode: gameMode,
+          totalQuestions: totalQuestions,
+          correctAnswers: stats.correct,
+          questionsSummary: answerHistory
+        });
         
         setSaveStatus('saved');
         setHasSaved(true);
@@ -138,7 +150,7 @@ export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderb
     }
 
     saveScore();
-  }, [user, score, hasSaved, gameMode, stats, fastAnswers]);
+  }, [user, score, hasSaved, gameMode, stats, fastAnswers, answerHistory, totalQuestions]);
 
   return (
     <motion.div 
