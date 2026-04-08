@@ -25,38 +25,31 @@ export function StartScreen({ onStart, user }: StartScreenProps) {
         <Trophy className="w-10 h-10 sm:w-12 sm:h-12 text-sand-400" />
       </motion.div>
       
-      <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-4 sm:mb-6 text-[#ead7ad]">
-        The Ultimate <br/>
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-sand-300 to-sand-600">
-          Wildlife Trivia
-        </span>
+      <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tight mb-2 text-[#ead7ad] uppercase">
+        The Ultimate
       </h1>
       
-      <p className="text-base sm:text-lg md:text-xl text-[#ead7ad] mb-8 sm:mb-12 max-w-lg leading-relaxed">
+      <div className="w-full max-w-md h-24 sm:h-32 bg-gradient-to-b from-[#ead7ad] to-[#c7a06f] opacity-80 rounded-lg mb-8" />
+      
+      <p className="text-base sm:text-lg md:text-xl text-[#ead7ad] mb-8 sm:mb-12 max-w-lg leading-relaxed font-medium">
         Test your knowledge on wildlife. Answer fast to earn more points and climb the global leaderboard.
       </p>
       
-      <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
         <button
           onClick={() => onStart('classic')}
-          className="group relative inline-flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-sand-200 text-dark-950 font-bold text-base sm:text-lg rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto"
+          className="group relative inline-flex items-center justify-center gap-3 px-10 py-4 bg-[#ead7ad] text-[#21431c] font-black text-lg sm:text-xl rounded-full transition-all hover:scale-105 active:scale-95 w-full sm:w-auto shadow-xl"
         >
-          <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-sand-100 to-sand-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <span className="relative flex items-center gap-2">
-            <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-            Classic Mode
-          </span>
+          <Play className="w-5 h-5 fill-current" />
+          Classic Mode
         </button>
 
         <button
           onClick={() => onStart('marathon')}
-          className="group relative inline-flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-red-900/80 text-red-100 border border-red-500/50 font-bold text-base sm:text-lg rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto"
+          className="group relative inline-flex items-center justify-center gap-3 px-10 py-4 bg-[#631a1a] text-red-50 border border-red-900/50 font-black text-lg sm:text-xl rounded-full transition-all hover:scale-105 active:scale-95 w-full sm:w-auto shadow-xl"
         >
-          <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-red-800 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <span className="relative flex items-center gap-2">
-            <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
-            Marathon Mode
-          </span>
+          <Flame className="w-5 h-5 fill-current" />
+          Marathon Mode
         </button>
       </div>
       
