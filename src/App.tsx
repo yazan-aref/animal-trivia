@@ -91,7 +91,7 @@ export default function App() {
           </a>
 
           <a 
-            href="https://games.mawil.org/trivia"
+            href="https://games.mawil.org"
             className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-sand-900/40 hover:bg-sand-800/60 border border-sand-800/50 rounded-full text-xs font-semibold text-sand-300 transition-all hover:text-sand-100"
           >
             <Gamepad2 className="w-4 h-4" />
