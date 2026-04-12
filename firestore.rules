@@ -68,16 +68,15 @@ service cloud.firestore {
 
     // Domain Validators
     function isValidLeaderboardEntry() {
-      return hasOnlyAllowedFields(['uid', 'displayName', 'photoURL', 'score', 'gamesPlayed', 'gamesWon', 'currentStreak', 'maxStreak', 'timestamp']) &&
-             hasRequiredFields(['uid', 'displayName', 'photoURL', 'score', 'gamesPlayed', 'gamesWon', 'currentStreak', 'maxStreak', 'timestamp']) &&
+      return hasOnlyAllowedFields(['uid', 'displayName', 'photoURL', 'score', 'quizzesCompleted', 'stats', 'achievements', 'timestamp']) &&
+             hasRequiredFields(['uid', 'displayName', 'photoURL', 'score', 'quizzesCompleted', 'timestamp']) &&
              request.resource.data.uid is string &&
              request.resource.data.displayName is string && request.resource.data.displayName.size() > 0 && request.resource.data.displayName.size() < 100 &&
              request.resource.data.photoURL is string && isValidUrl(request.resource.data.photoURL) && request.resource.data.photoURL.size() < 500 &&
              request.resource.data.score is number && request.resource.data.score >= 0 &&
-             request.resource.data.gamesPlayed is number && request.resource.data.gamesPlayed >= 0 &&
-             request.resource.data.gamesWon is number && request.resource.data.gamesWon >= 0 &&
-             request.resource.data.currentStreak is number && request.resource.data.currentStreak >= 0 &&
-             request.resource.data.maxStreak is number && request.resource.data.maxStreak >= 0 &&
+             request.resource.data.quizzesCompleted is number && request.resource.data.quizzesCompleted >= 0 &&
+             isValidStats() &&
+             isValidAchievements() &&
              request.resource.data.timestamp is timestamp;
     }
 

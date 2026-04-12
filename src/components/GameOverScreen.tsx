@@ -118,10 +118,13 @@ export function GameOverScreen({ score, totalQuestions, onRestart, onViewLeaderb
           displayName: user.displayName || 'Anonymous',
           photoURL: user.photoURL || '',
           score: increment(score),
-          gamesPlayed: increment(1),
-          gamesWon: increment(score > 0 ? 1 : 0),
-          currentStreak: increment(1),
-          maxStreak: increment(1),
+          quizzesCompleted: currentQuizzesCompleted,
+          stats: {
+            totalCorrect: currentTotalCorrect,
+            maxStreak: currentMaxStreak,
+            marathonHighScore: currentMarathonHighScore
+          },
+          achievements: updatedAchievements,
           timestamp: serverTimestamp()
         }, { merge: true });
 
