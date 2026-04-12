@@ -73,7 +73,6 @@ service cloud.firestore {
              request.resource.data.uid is string &&
              request.resource.data.displayName is string && request.resource.data.displayName.size() > 0 && request.resource.data.displayName.size() < 100 &&
              request.resource.data.photoURL is string && isValidUrl(request.resource.data.photoURL) && request.resource.data.photoURL.size() < 500 &&
-             request.resource.data.score is number && request.resource.data.score >= 0 &&
              request.resource.data.quizzesCompleted is number && request.resource.data.quizzesCompleted >= 0 &&
              isValidStats() &&
              isValidAchievements() &&
@@ -101,7 +100,7 @@ service cloud.firestore {
       allow read: if true;
       
       // Users can only create or update their own score
-      allow create: if isOwner(userId) && isValidLeaderboardEntry() && uidUnchanged();
+      allow create: if isOwner(userId) && isValidLeaderboardEntry() && request.resource.data.score is number && request.resource.data.score >= 0 && uidUnchanged();
       allow update: if isOwner(userId) && isValidLeaderboardEntry() && uidNotModified() && 
                     // Ensure they don't change their UID
                     request.resource.data.uid == resource.data.uid;
