@@ -2,7 +2,7 @@
   "entities": {
     "LeaderboardEntry": {
       "title": "LeaderboardEntry",
-      "description": "A user's top score in the Animal Trivia Game.",
+      "description": "A user's top score in the Animal Wordle Game.",
       "type": "object",
       "properties": {
         "uid": {
@@ -19,77 +19,45 @@
         },
         "score": {
           "type": "number",
-          "description": "The user's highest score."
+          "description": "The user's total score."
         },
-        "quizzesCompleted": {
+        "gamesPlayed": {
           "type": "number",
-          "description": "The total number of quizzes the user has completed."
+          "description": "The total number of games the user has played."
         },
-        "stats": {
-          "type": "object",
-          "description": "User statistics.",
-          "properties": {
-            "totalCorrect": { "type": "number" },
-            "maxStreak": { "type": "number" },
-            "marathonHighScore": { "type": "number" }
-          }
+        "gamesWon": {
+          "type": "number",
+          "description": "The total number of games the user has won."
         },
-        "achievements": {
-          "type": "array",
-          "description": "List of earned achievement IDs.",
-          "items": { "type": "string" }
+        "currentStreak": {
+          "type": "number",
+          "description": "The user's current win streak."
+        },
+        "maxStreak": {
+          "type": "number",
+          "description": "The user's maximum win streak."
         },
         "timestamp": {
           "type": "timestamp",
           "description": "The time the score was achieved."
         }
       },
-      "required": ["uid", "displayName", "photoURL", "score", "quizzesCompleted", "timestamp"]
+      "required": ["uid", "displayName", "photoURL", "score", "gamesPlayed", "gamesWon", "currentStreak", "maxStreak", "timestamp"]
     },
     "QuizHistoryEntry": {
       "title": "QuizHistoryEntry",
-      "description": "A record of a completed quiz session.",
+      "description": "A record of an individual quiz attempt.",
       "type": "object",
       "properties": {
-        "userId": {
-          "type": "string",
-          "description": "The user's Firebase Auth UID."
-        },
-        "date": {
-          "type": "timestamp",
-          "description": "The time the quiz was completed."
-        },
-        "score": {
-          "type": "number",
-          "description": "The final score of the quiz."
-        },
-        "mode": {
-          "type": "string",
-          "description": "The game mode played (e.g., classic, marathon)."
-        },
-        "totalQuestions": {
-          "type": "number",
-          "description": "Total number of questions answered."
-        },
-        "correctAnswers": {
-          "type": "number",
-          "description": "Number of questions answered correctly."
-        },
-        "questionsSummary": {
-          "type": "array",
-          "description": "Summary of each question answered.",
-          "items": {
-            "type": "object",
-            "properties": {
-              "questionText": { "type": "string" },
-              "isCorrect": { "type": "boolean" },
-              "userAnswer": { "type": "string" },
-              "correctAnswer": { "type": "string" }
-            }
-          }
-        }
+        "userId": { "type": "string" },
+        "date": { "type": "timestamp" },
+        "score": { "type": "number" },
+        "mode": { "type": "string" },
+        "totalQuestions": { "type": "number" },
+        "correctAnswers": { "type": "number" },
+        "questionsSummary": { "type": "object" }
       },
-      "required": ["userId", "date", "score", "mode", "totalQuestions", "correctAnswers", "questionsSummary"]
+      "required": ["userId", "date", "score", "mode", "totalQuestions", "correctAnswers"]
     }
   },
   "firestore": {
@@ -103,7 +71,7 @@
       "schema": {
         "$ref": "#/entities/QuizHistoryEntry"
       },
-      "description": "Stores individual quiz session history for users."
+      "description": "Stores individual quiz attempt records."
     }
   }
 }
